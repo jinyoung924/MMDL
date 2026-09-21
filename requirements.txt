@@ -1,7 +1,9 @@
 # Pinned for reproducibility (RunPod RTX 4090, CUDA 12.9, Python 3.12).
 # vLLM pins torch==2.13.0 itself; do NOT install torch separately.
 # Qwen3-VL needs transformers>=4.57 (vLLM 0.29 pulls transformers>=5.10.4).
-vllm==0.29.0
+# NOTE: `pip install vllm==0.29.0` from PyPI is a CUDA 13.0 build (needs libcudart.so.13).
+# The RunPod image ships torch 2.13.0+cu129, so install the official cu129 wheel from the GitHub release.
+vllm @ https://github.com/vllm-project/vllm/releases/download/v0.29.0/vllm-0.29.0%2Bcu129-cp38-abi3-manylinux_2_28_x86_64.whl
 datasets>=3.0.0
 huggingface_hub>=0.30.0
 pyyaml>=6.0
