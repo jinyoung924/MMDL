@@ -46,5 +46,6 @@ python -m pip install -r requirements.txt
 
 echo "== versions =="
 python scripts/check_env.py
+mkdir -p results
 python -m pip freeze > results/requirements.lock.txt
 echo "wrote results/requirements.lock.txt"
