@@ -1,14 +1,14 @@
 """Prompt templates.
 
-Baseline (``mmmu_direct``) is the official MMMU template, copied verbatim from
-https://github.com/MMMU-Benchmark/MMMU/blob/main/mmmu/configs/llava1.5.yaml
-and assembled exactly like ``construct_prompt`` in
-https://github.com/MMMU-Benchmark/MMMU/blob/main/mmmu/utils/data_utils.py
-(options are rendered as ``(A) text\\n(B) text\\n...``).
+Baseline (``mmmu_pro_cot``) is the official MMMU-Pro CoT instruction
+(https://github.com/MMMU-Benchmark/MMMU/tree/main/mmmu-pro, prompts.yaml), appended to the question
+and the options rendered exactly like ``construct_prompt`` in
+https://github.com/MMMU-Benchmark/MMMU/blob/main/mmmu/utils/data_utils.py (``(A) text\\n(B) text\\n...``).
 
-``mmmu_pro_cot`` is the official MMMU-Pro CoT instruction
-(https://github.com/MMMU-Benchmark/MMMU/tree/main/mmmu-pro, prompts.yaml) and is
-used ONLY as an ablation to explain the gap to the official number.
+``mmmu_direct`` is the official MMMU direct-answer template, copied verbatim from
+https://github.com/MMMU-Benchmark/MMMU/blob/main/mmmu/configs/llava1.5.yaml. It is kept as an
+ablation: with it Qwen3-VL-4B-Instruct still writes a long solution for ~1/3 of the questions, so the
+model's behaviour is mixed and the score depends on how many of those get cut off (see the report).
 """
 
 TEMPLATES = {

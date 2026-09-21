@@ -5,7 +5,7 @@
 #   git clone https://github.com/jinyoung924/MMDL.git /workspace/MMDL && bash /workspace/MMDL/runpod.sh
 #
 # Re-running after a disconnect resumes where it stopped (per-subject checkpoints).
-# Knobs (env vars):  SKIP_SMOKE=1  SKIP_FULL=1  RUN_COT=1  OUT_ROOT=/workspace/results
+# Knobs (env vars):  SKIP_SMOKE=1  SKIP_FULL=1  RUN_ABLATIONS=1  OUT_ROOT=/workspace/results
 # ============================================================================
 set -euo pipefail
 REPO_DIR="${REPO_DIR:-/workspace/MMDL}"
@@ -21,15 +21,16 @@ if [[ "${SKIP_SMOKE:-0}" != "1" ]]; then
 fi
 
 if [[ "${SKIP_FULL:-0}" != "1" ]]; then
-  echo "== full run: 30 subjects x 30 questions, mmmu_direct prompt =="
+  echo "== full run: 30 subjects x 30 questions (config defaults: mmmu_pro_cot prompt, 8192 tokens) =="
   OUT_DIR="$OUT_ROOT/mmmu_baseline" bash scripts/run_mmmu_eval.sh
   rm -rf results/mmmu_baseline && cp -r "$OUT_ROOT/mmmu_baseline" results/mmmu_baseline
 fi
 
-if [[ "${RUN_COT:-0}" == "1" ]]; then
-  echo "== ablation: MMMU-Pro CoT prompt, same recipe/parser =="
-  OUT_DIR="$OUT_ROOT/ablation_cot" bash scripts/run_mmmu_eval.sh --prompt_style mmmu_pro_cot
-  rm -rf results/ablation_cot && cp -r "$OUT_ROOT/ablation_cot" results/ablation_cot
+if [[ "${RUN_ABLATIONS:-0}" == "1" ]]; then
+  echo "== ablations: official MMMU direct-answer prompt at 1024 and 8192 tokens (same recipe/seed/parser) =="
+  OUT_DIR="$OUT_ROOT/ablation_direct_1k" bash scripts/run_mmmu_eval.sh --prompt_style mmmu_direct --max_new_tokens 1024
+  OUT_DIR="$OUT_ROOT/ablation_direct_8k" bash scripts/run_mmmu_eval.sh --prompt_style mmmu_direct --max_new_tokens 8192
+  for d in ablation_direct_1k ablation_direct_8k; do rm -rf "results/$d" && cp -r "$OUT_ROOT/$d" "results/$d"; done
 fi
 
 echo "== done. results copied into $REPO_DIR/results — commit & push them: =="

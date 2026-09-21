@@ -1,64 +1,64 @@
-[15:31:07] env: {'python': '3.12.3', 'platform': 'Linux-6.8.0-139-generic-x86_64-with-glibc2.39', 'torch': '2.13.0+cu129', 'vllm': '0.29.0+cu129', 'transformers': '5.17.0', 'datasets': '5.0.1', 'gpu': 'NVIDIA GeForce RTX 4090, 24564, 595.91.07', 'git_commit': 'b7a06acbcc8b953f0991785c93a57774537c7c2e', 'hf_home': '/workspace/hf'}
-[15:31:07] config: {'model': {'path': 'Qwen/Qwen3-VL-4B-Instruct', 'revision': 'ebb281ec70b05090aa6165b016eac8ec08e71b17', 'dtype': 'bfloat16', 'backend': 'vllm'}, 'data': {'root': 'MMMU/MMMU', 'revision': '98e6ac0cb9b7b2cd2c991b85a50762edc4aedc68', 'split': 'validation'}, 'prompt': {'style': 'mmmu_direct'}, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.8, 'top_k': 20, 'repetition_penalty': 1.0, 'presence_penalty': 1.5, 'seed': 3407}, 'generation': {'max_new_tokens': 1024}, 'image': {'min_pixels': 65536, 'max_pixels': 2097152, 'token_budget_per_question': 12288}, 'engine': {'max_model_len': 16384, 'gpu_memory_utilization': 0.9, 'limit_images_per_prompt': 7}}
-[15:31:10] [Accounting] total=30 done=0 todo=30
-[15:31:32] [Agriculture] total=30 done=0 todo=30
-[15:31:35] [Architecture_and_Engineering] total=30 done=0 todo=30
-[15:31:36] [Art] total=30 done=0 todo=30
-[15:31:44] [Art_Theory] total=30 done=0 todo=30
-[15:31:47] [Basic_Medical_Science] total=30 done=0 todo=30
-[15:31:53] [Biology] total=30 done=0 todo=30
-[15:31:55] [Chemistry] total=30 done=0 todo=30
-[15:32:00] [Clinical_Medicine] total=30 done=0 todo=30
-[15:32:03] [Computer_Science] total=30 done=0 todo=30
-[15:32:08] [Design] total=30 done=0 todo=30
-[15:32:14] [Diagnostics_and_Laboratory_Medicine] total=30 done=0 todo=30
-[15:32:16] [Economics] total=30 done=0 todo=30
-[15:32:17] [Electronics] total=30 done=0 todo=30
-[15:32:21] [Energy_and_Power] total=30 done=0 todo=30
-[15:32:23] [Finance] total=30 done=0 todo=30
-[15:32:29] [Geography] total=30 done=0 todo=30
-[15:32:35] [History] total=30 done=0 todo=30
-[15:32:40] [Literature] total=30 done=0 todo=30
-[15:32:43] [Manage] total=30 done=0 todo=30
-[15:32:45] [Marketing] total=30 done=0 todo=30
-[15:32:48] [Materials] total=30 done=0 todo=30
-[15:32:50] [Math] total=30 done=0 todo=30
-[15:32:52] [Mechanical_Engineering] total=30 done=0 todo=30
-[15:32:57] [Music] total=30 done=0 todo=30
-[15:33:00] [Pharmacy] total=30 done=0 todo=30
-[15:33:02] [Physics] total=30 done=0 todo=30
-[15:33:06] [Psychology] total=30 done=0 todo=30
-[15:33:10] [Public_Health] total=30 done=0 todo=30
-[15:33:16] [Sociology] total=30 done=0 todo=30
-[15:34:09] engine ready in 52.8s
-[15:34:28] [Accounting] 30 q in 19.5s (0.65s/q) batch-acc=53.3
-[15:34:33] [Agriculture] 30 q in 4.9s (0.16s/q) batch-acc=56.7
-[15:34:48] [Architecture_and_Engineering] 30 q in 14.7s (0.49s/q) batch-acc=20.0
-[15:34:50] [Art] 30 q in 1.9s (0.06s/q) batch-acc=60.0
-[15:34:52] [Art_Theory] 30 q in 2.5s (0.08s/q) batch-acc=80.0
-[15:34:53] [Basic_Medical_Science] 30 q in 0.9s (0.03s/q) batch-acc=70.0
-[15:35:06] [Biology] 30 q in 13.2s (0.44s/q) batch-acc=50.0
-[15:35:18] [Chemistry] 30 q in 11.9s (0.40s/q) batch-acc=36.7
-[15:35:20] [Clinical_Medicine] 30 q in 1.3s (0.04s/q) batch-acc=66.7
-[15:35:32] [Computer_Science] 30 q in 12.6s (0.42s/q) batch-acc=50.0
-[15:35:34] [Design] 30 q in 1.5s (0.05s/q) batch-acc=76.7
-[15:35:37] [Diagnostics_and_Laboratory_Medicine] 30 q in 3.1s (0.10s/q) batch-acc=40.0
-[15:35:49] [Economics] 30 q in 12.4s (0.41s/q) batch-acc=73.3
-[15:36:01] [Electronics] 30 q in 11.9s (0.40s/q) batch-acc=46.7
-[15:36:17] [Energy_and_Power] 30 q in 15.5s (0.52s/q) batch-acc=46.7
-[15:36:29] [Finance] 30 q in 12.8s (0.43s/q) batch-acc=43.3
-[15:36:42] [Geography] 30 q in 12.2s (0.41s/q) batch-acc=53.3
-[15:36:44] [History] 30 q in 2.1s (0.07s/q) batch-acc=66.7
-[15:36:45] [Literature] 30 q in 1.3s (0.04s/q) batch-acc=80.0
-[15:36:57] [Manage] 30 q in 12.4s (0.41s/q) batch-acc=40.0
-[15:37:11] [Marketing] 30 q in 13.6s (0.45s/q) batch-acc=70.0
-[15:37:27] [Materials] 30 q in 15.9s (0.53s/q) batch-acc=53.3
-[15:37:40] [Math] 30 q in 13.4s (0.45s/q) batch-acc=50.0
-[15:37:54] [Mechanical_Engineering] 30 q in 13.8s (0.46s/q) batch-acc=36.7
-[15:37:56] [Music] 30 q in 1.9s (0.06s/q) batch-acc=33.3
-[15:38:07] [Pharmacy] 30 q in 11.5s (0.38s/q) batch-acc=66.7
-[15:38:20] [Physics] 30 q in 12.1s (0.40s/q) batch-acc=56.7
-[15:38:23] [Psychology] 30 q in 3.6s (0.12s/q) batch-acc=73.3
-[15:38:36] [Public_Health] 30 q in 12.4s (0.41s/q) batch-acc=80.0
-[15:38:38] [Sociology] 30 q in 2.5s (0.08s/q) batch-acc=63.3
-[15:38:40] elapsed=452.8s peak_vram=22852 MiB
+[16:17:54] env: {'python': '3.12.3', 'platform': 'Linux-6.8.0-139-generic-x86_64-with-glibc2.39', 'torch': '2.13.0+cu129', 'vllm': '0.29.0+cu129', 'transformers': '5.17.0', 'datasets': '5.0.1', 'gpu': 'NVIDIA GeForce RTX 4090, 24564, 595.91.07', 'git_commit': 'b7a06acbcc8b953f0991785c93a57774537c7c2e', 'hf_home': '/workspace/hf'}
+[16:17:54] config: {'model': {'path': 'Qwen/Qwen3-VL-4B-Instruct', 'revision': 'ebb281ec70b05090aa6165b016eac8ec08e71b17', 'dtype': 'bfloat16', 'backend': 'vllm'}, 'data': {'root': 'MMMU/MMMU', 'revision': '98e6ac0cb9b7b2cd2c991b85a50762edc4aedc68', 'split': 'validation'}, 'prompt': {'style': 'mmmu_pro_cot'}, 'sampling': {'do_sample': True, 'temperature': 0.7, 'top_p': 0.8, 'top_k': 20, 'repetition_penalty': 1.0, 'presence_penalty': 1.5, 'seed': 3407}, 'generation': {'max_new_tokens': 8192}, 'image': {'min_pixels': 65536, 'max_pixels': 2097152, 'token_budget_per_question': 12288}, 'engine': {'max_model_len': 16384, 'gpu_memory_utilization': 0.9, 'limit_images_per_prompt': 7}}
+[16:17:54] [Accounting] total=30 done=0 todo=30
+[16:17:58] [Agriculture] total=30 done=0 todo=30
+[16:17:58] [Architecture_and_Engineering] total=30 done=0 todo=30
+[16:17:59] [Art] total=30 done=0 todo=30
+[16:18:01] [Art_Theory] total=30 done=0 todo=30
+[16:18:01] [Basic_Medical_Science] total=30 done=0 todo=30
+[16:18:02] [Biology] total=30 done=0 todo=30
+[16:18:03] [Chemistry] total=30 done=0 todo=30
+[16:18:03] [Clinical_Medicine] total=30 done=0 todo=30
+[16:18:04] [Computer_Science] total=30 done=0 todo=30
+[16:18:05] [Design] total=30 done=0 todo=30
+[16:18:07] [Diagnostics_and_Laboratory_Medicine] total=30 done=0 todo=30
+[16:18:07] [Economics] total=30 done=0 todo=30
+[16:18:07] [Electronics] total=30 done=0 todo=30
+[16:18:08] [Energy_and_Power] total=30 done=0 todo=30
+[16:18:08] [Finance] total=30 done=0 todo=30
+[16:18:09] [Geography] total=30 done=0 todo=30
+[16:18:10] [History] total=30 done=0 todo=30
+[16:18:10] [Literature] total=30 done=0 todo=30
+[16:18:11] [Manage] total=30 done=0 todo=30
+[16:18:12] [Marketing] total=30 done=0 todo=30
+[16:18:12] [Materials] total=30 done=0 todo=30
+[16:18:13] [Math] total=30 done=0 todo=30
+[16:18:13] [Mechanical_Engineering] total=30 done=0 todo=30
+[16:18:14] [Music] total=30 done=0 todo=30
+[16:18:14] [Pharmacy] total=30 done=0 todo=30
+[16:18:15] [Physics] total=30 done=0 todo=30
+[16:18:16] [Psychology] total=30 done=0 todo=30
+[16:18:16] [Public_Health] total=30 done=0 todo=30
+[16:18:17] [Sociology] total=30 done=0 todo=30
+[16:19:12] engine ready in 55.1s
+[16:21:43] [Accounting] 30 q in 150.7s (5.02s/q) batch-acc=66.7
+[16:22:09] [Agriculture] 30 q in 26.3s (0.88s/q) batch-acc=53.3
+[16:26:54] [Architecture_and_Engineering] 30 q in 285.0s (9.50s/q) batch-acc=46.7
+[16:28:36] [Art] 30 q in 101.2s (3.37s/q) batch-acc=63.3
+[16:30:08] [Art_Theory] 30 q in 92.6s (3.09s/q) batch-acc=86.7
+[16:30:41] [Basic_Medical_Science] 30 q in 32.6s (1.09s/q) batch-acc=73.3
+[16:32:25] [Biology] 30 q in 103.8s (3.46s/q) batch-acc=60.0
+[16:34:48] [Chemistry] 30 q in 143.3s (4.78s/q) batch-acc=56.7
+[16:36:33] [Clinical_Medicine] 30 q in 105.4s (3.51s/q) batch-acc=63.3
+[16:38:38] [Computer_Science] 30 q in 124.5s (4.15s/q) batch-acc=63.3
+[16:39:09] [Design] 30 q in 30.7s (1.02s/q) batch-acc=73.3
+[16:40:50] [Diagnostics_and_Laboratory_Medicine] 30 q in 101.7s (3.39s/q) batch-acc=26.7
+[16:42:03] [Economics] 30 q in 72.5s (2.42s/q) batch-acc=80.0
+[16:45:27] [Electronics] 30 q in 203.6s (6.79s/q) batch-acc=40.0
+[16:49:53] [Energy_and_Power] 30 q in 266.3s (8.88s/q) batch-acc=60.0
+[16:52:04] [Finance] 30 q in 131.6s (4.39s/q) batch-acc=70.0
+[16:54:00] [Geography] 30 q in 115.2s (3.84s/q) batch-acc=63.3
+[16:55:35] [History] 30 q in 95.2s (3.17s/q) batch-acc=70.0
+[16:55:55] [Literature] 30 q in 19.8s (0.66s/q) batch-acc=83.3
+[16:57:47] [Manage] 30 q in 112.4s (3.75s/q) batch-acc=63.3
+[16:59:32] [Marketing] 30 q in 104.5s (3.48s/q) batch-acc=90.0
+[17:04:04] [Materials] 30 q in 272.2s (9.07s/q) batch-acc=53.3
+[17:06:29] [Math] 30 q in 145.4s (4.85s/q) batch-acc=60.0
+[17:10:24] [Mechanical_Engineering] 30 q in 235.0s (7.83s/q) batch-acc=50.0
+[17:14:06] [Music] 30 q in 221.3s (7.38s/q) batch-acc=40.0
+[17:15:50] [Pharmacy] 30 q in 104.7s (3.49s/q) batch-acc=83.3
+[17:17:31] [Physics] 30 q in 100.8s (3.36s/q) batch-acc=76.7
+[17:18:25] [Psychology] 30 q in 54.2s (1.81s/q) batch-acc=76.7
+[17:20:16] [Public_Health] 30 q in 110.3s (3.68s/q) batch-acc=76.7
+[17:21:48] [Sociology] 30 q in 92.7s (3.09s/q) batch-acc=63.3
+[17:21:51] elapsed=3837.1s peak_vram=22987 MiB

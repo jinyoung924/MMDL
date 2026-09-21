@@ -14,7 +14,7 @@ data:
   split: validation
 
 prompt:
-  style: mmmu_direct   # mmmu_direct (baseline) | mmmu_pro_cot (ablation only)
+  style: mmmu_pro_cot   # mmmu_pro_cot (baseline) | mmmu_direct (ablation: official MMMU direct-answer template)
 
 # Qwen official recipe for Instruct models.
 # Source 1: Qwen/Qwen3-VL-4B-Instruct generation_config.json @ebb281e
@@ -31,7 +31,10 @@ sampling:
   seed: 3407            # per-request seed = seed + global question index (resume-order independent)
 
 generation:
-  max_new_tokens: 1024  # direct-answer uses a few tokens; budget only matters for the CoT ablation
+  # Measured on MMMU-val (results/ablation_*): at 1024 tokens 166/900 responses were cut off even with the
+  # direct-answer prompt (acc 34.3% vs 61.4% for finished ones); 8192 recovers most of them.
+  # Qwen's own recipe uses out_seq_length=32768; 8192 is our 24 GB / runtime trade-off (~64 min per eval).
+  max_new_tokens: 8192
 
 image:
   # Qwen3-VL: 1 visual token per 32x32 px (patch 16 x merge 2).

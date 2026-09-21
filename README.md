@@ -2,10 +2,18 @@
 
 Reproducible evaluation pipeline (assignment 01). Report: [reports/mmmu_baseline.md](reports/mmmu_baseline.md).
 
+| Run | Prompt | max_new_tokens | Overall (macro avg) | Dir |
+|---|---|---|---|---|
+| **Baseline** | MMMU-Pro CoT | 8192 | **64.56** | `results/mmmu_baseline/` |
+| Ablation | MMMU direct-answer | 8192 | 60.11 | `results/ablation_direct_8k/` |
+| Ablation | MMMU direct-answer | 1024 | 56.44 | `results/ablation_direct_1k/` |
+
+Official (Qwen3-VL Technical Report): 67.4.
+
 ## Reproduce (one command)
 
 ```bash
-bash scripts/run_mmmu_eval.sh            # 30 subjects x 30 questions -> results/mmmu_baseline/
+bash scripts/run_mmmu_eval.sh            # 30 subjects x 30 questions -> results/mmmu_baseline/  (~64 min on one RTX 4090)
 ```
 
 Paths are env vars (defaults = the pinned assignment values):
@@ -15,7 +23,8 @@ MODEL_PATH=/path/to/finetuned_ckpt DATA_ROOT=/path/to/mmmu_snapshot OUT_DIR=resu
   bash scripts/run_mmmu_eval.sh
 ```
 
-RunPod one-shot (setup + smoke test + full run): see [runpod.sh](runpod.sh).
+RunPod one-shot (setup + smoke test + full run): see [runpod.sh](runpod.sh). `RUN_ABLATIONS=1` also runs the two
+direct-answer ablations. Re-grade stored responses without a GPU: `python scripts/regrade.py --out_dir results/<run>`.
 
 ## Environment
 
@@ -34,7 +43,9 @@ configs/mmmu_baseline.yaml   every pipeline choice (model/data revision, prompt,
 src/mmmu_eval/               data.py (load/resize/interleave) · prompts.py · parser.py (MMMU official port)
                              model.py (vLLM) · runner.py (batched gen + resume) · scorer.py · meta.py
 scripts/run_mmmu_eval.sh     one-command reproduction  ->  run_eval.py + score.py
-scripts/setup_runpod.sh      deps + version check        runpod.sh: SSH entry point
+scripts/setup_runpod.sh      CUDA preflight + venv + deps      runpod.sh: SSH entry point
+scripts/regrade.py           re-parse stored responses with the current parser (no GPU)
+scripts/finish_and_terminate.sh   optional: push results from the pod, then self-terminate it
 results/<run>/               predictions/<subject>.jsonl, scores.{md,csv,json}, run_meta.json, run.log
 reports/mmmu_baseline.md     submission (from docs/submit-template.md)
 docs/                        assignment text, template, references

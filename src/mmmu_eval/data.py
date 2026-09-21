@@ -6,7 +6,6 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from datasets import load_dataset
 from PIL import Image
 
 from .prompts import build_prompt
@@ -26,6 +25,8 @@ IMAGE_FACTOR = 32  # Qwen3-VL: patch_size 16 * spatial_merge_size 2 -> one visua
 
 def load_subject(data_root: str, subject: str, split: str, revision: str | None):
     """``data_root`` is either a HF hub id (revision applied) or a local snapshot directory."""
+    from datasets import load_dataset  # lazy: scoring/regrading must work without `datasets` installed
+
     if os.path.isdir(data_root):
         return load_dataset(data_root, subject, split=split)
     return load_dataset(data_root, subject, split=split, revision=revision)

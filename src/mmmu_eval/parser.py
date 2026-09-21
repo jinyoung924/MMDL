@@ -160,13 +160,18 @@ def eval_open(gold_i, pred_i):
     return correct
 
 
-_ANSWER_LINE_RE = re.compile(r"answer\s*:\s*\(?\s*([A-Za-z0-9][^\n]*?)\s*\)?\s*$", re.IGNORECASE | re.MULTILINE)
+_ANSWER_LINE_RE = re.compile(r"answer\s*:\s*([^\n]+?)\s*$", re.IGNORECASE | re.MULTILINE)
+_MARKUP_RE = re.compile(r"\\boxed|\\text|[*$`{}\\]")
 
 
 def extract_answer_line(response: str) -> str | None:
-    """MMMU-Pro style: take the LAST ``Answer: X`` line if present (CoT ablation only)."""
+    """MMMU-Pro style: take the LAST ``Answer: X`` line if present (CoT prompt only).
+    Markdown/LaTeX wrappers (``**B**``, ``$C``, ``\\boxed{B}``) are stripped so the official
+    parser below sees ``B`` / ``(B) text``; parentheses are kept on purpose."""
     matches = _ANSWER_LINE_RE.findall(response)
-    return matches[-1].strip() if matches else None
+    if not matches:
+        return None
+    return _MARKUP_RE.sub(" ", matches[-1]).strip()
 
 
 def grade(response: str, question_type: str, all_choices, index2ans, gold, rng: random.Random, answer_line_first: bool):

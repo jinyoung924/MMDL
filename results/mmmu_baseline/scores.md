@@ -1,36 +1,36 @@
 | No. | Subject | Data Num | Acc |
 |---|---|---|---|
-| 1 | Accounting | 30 | 53.33 |
-| 2 | Agriculture | 30 | 56.67 |
-| 3 | Architecture_and_Engineering | 30 | 20.00 |
-| 4 | Art | 30 | 60.00 |
-| 5 | Art_Theory | 30 | 80.00 |
-| 6 | Basic_Medical_Science | 30 | 70.00 |
-| 7 | Biology | 30 | 50.00 |
-| 8 | Chemistry | 30 | 36.67 |
-| 9 | Clinical_Medicine | 30 | 66.67 |
-| 10 | Computer_Science | 30 | 50.00 |
-| 11 | Design | 30 | 76.67 |
-| 12 | Diagnostics_and_Laboratory_Medicine | 30 | 40.00 |
-| 13 | Economics | 30 | 73.33 |
-| 14 | Electronics | 30 | 46.67 |
-| 15 | Energy_and_Power | 30 | 46.67 |
-| 16 | Finance | 30 | 43.33 |
-| 17 | Geography | 30 | 53.33 |
-| 18 | History | 30 | 66.67 |
-| 19 | Literature | 30 | 80.00 |
-| 20 | Manage | 30 | 40.00 |
-| 21 | Marketing | 30 | 70.00 |
+| 1 | Accounting | 30 | 66.67 |
+| 2 | Agriculture | 30 | 53.33 |
+| 3 | Architecture_and_Engineering | 30 | 46.67 |
+| 4 | Art | 30 | 63.33 |
+| 5 | Art_Theory | 30 | 86.67 |
+| 6 | Basic_Medical_Science | 30 | 73.33 |
+| 7 | Biology | 30 | 60.00 |
+| 8 | Chemistry | 30 | 56.67 |
+| 9 | Clinical_Medicine | 30 | 63.33 |
+| 10 | Computer_Science | 30 | 63.33 |
+| 11 | Design | 30 | 73.33 |
+| 12 | Diagnostics_and_Laboratory_Medicine | 30 | 26.67 |
+| 13 | Economics | 30 | 80.00 |
+| 14 | Electronics | 30 | 40.00 |
+| 15 | Energy_and_Power | 30 | 60.00 |
+| 16 | Finance | 30 | 70.00 |
+| 17 | Geography | 30 | 63.33 |
+| 18 | History | 30 | 70.00 |
+| 19 | Literature | 30 | 83.33 |
+| 20 | Manage | 30 | 66.67 |
+| 21 | Marketing | 30 | 90.00 |
 | 22 | Materials | 30 | 53.33 |
-| 23 | Math | 30 | 50.00 |
-| 24 | Mechanical_Engineering | 30 | 36.67 |
-| 25 | Music | 30 | 33.33 |
-| 26 | Pharmacy | 30 | 66.67 |
-| 27 | Physics | 30 | 56.67 |
-| 28 | Psychology | 30 | 73.33 |
-| 29 | Public_Health | 30 | 80.00 |
+| 23 | Math | 30 | 60.00 |
+| 24 | Mechanical_Engineering | 30 | 50.00 |
+| 25 | Music | 30 | 40.00 |
+| 26 | Pharmacy | 30 | 83.33 |
+| 27 | Physics | 30 | 76.67 |
+| 28 | Psychology | 30 | 76.67 |
+| 29 | Public_Health | 30 | 76.67 |
 | 30 | Sociology | 30 | 63.33 |
-| | **Overall (macro avg)** | **900** | **56.44** |
+| | **Overall (macro avg)** | **900** | **64.56** |
 
-계산식: `Overall = mean(30개 과목 accuracy)` = 56.44  (micro: 508/900 = 56.44)
-파싱 fallback(무작위 선택) 건수: 73, max_new_tokens 도달(잘림) 건수: 166, 완주 여부: True
+계산식: `Overall = mean(30개 과목 accuracy)` = 64.56  (micro: 581/900 = 64.56)
+파싱 fallback(무작위 선택) 건수: 19, max_new_tokens 도달(잘림) 건수: 145, 완주 여부: True
