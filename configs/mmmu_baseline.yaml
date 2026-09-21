@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# Every pipeline choice lives here. To re-evaluate a fine-tuned checkpoint,
+# change ONLY model.path (and model.revision to null for a local dir).
+# ---------------------------------------------------------------------------
+model:
+  path: Qwen/Qwen3-VL-4B-Instruct
+  revision: ebb281ec70b05090aa6165b016eac8ec08e71b17   # pinned by the assignment
+  dtype: bfloat16                                        # repo default (config.json torch_dtype); no quantization/casting
+  backend: vllm
+
+data:
+  root: MMMU/MMMU                                        # HF hub id, or a local snapshot dir
+  revision: 98e6ac0cb9b7b2cd2c991b85a50762edc4aedc68     # pinned by the assignment
+  split: validation
+
+prompt:
+  style: mmmu_direct   # mmmu_direct (baseline) | mmmu_pro_cot (ablation only)
+
+# Qwen official recipe for Instruct models.
+# Source 1: Qwen/Qwen3-VL-4B-Instruct generation_config.json @ebb281e
+#           (do_sample, temperature=0.7, top_p=0.8, top_k=20, repetition_penalty=1.0)
+# Source 2: https://github.com/QwenLM/Qwen3-VL README "Generation Hyperparameters"
+#           (adds presence_penalty=1.5, seed=3407, greedy=false)
+sampling:
+  do_sample: true
+  temperature: 0.7
+  top_p: 0.8
+  top_k: 20
+  repetition_penalty: 1.0
+  presence_penalty: 1.5
+  seed: 3407            # per-request seed = seed + global question index (resume-order independent)
+
+generation:
+  max_new_tokens: 1024  # direct-answer uses a few tokens; budget only matters for the CoT ablation
+
+image:
+  # Qwen3-VL: 1 visual token per 32x32 px (patch 16 x merge 2).
+  # Processor default longest_edge=16,777,216 px (~16k tokens/img) is too large for 7-image prompts.
+  min_pixels: 65536       # = processor default shortest_edge (64 tokens)
+  max_pixels: 2097152     # = 2048 tokens per image (2048*32*32)
+  # Sum of visual tokens per question is additionally capped so prompt fits max_model_len.
+  token_budget_per_question: 12288
+
+engine:
+  max_model_len: 16384
+  gpu_memory_utilization: 0.90
+  limit_images_per_prompt: 7   # MMMU has at most image_1..image_7

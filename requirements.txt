@@ -1,0 +1,9 @@
+# Pinned for reproducibility (RunPod RTX 4090, CUDA 12.9, Python 3.12).
+# vLLM pins torch==2.13.0 itself; do NOT install torch separately.
+# Qwen3-VL needs transformers>=4.57 (vLLM 0.29 pulls transformers>=5.10.4).
+vllm==0.29.0
+datasets>=3.0.0
+huggingface_hub>=0.30.0
+pyyaml>=6.0
+pillow>=10.0
+tqdm>=4.66
