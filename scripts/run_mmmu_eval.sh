@@ -22,6 +22,11 @@ if [[ -z "${HF_HOME:-}" && -d /workspace ]]; then export HF_HOME=/workspace/hf; 
 export HF_HUB_ENABLE_HF_TRANSFER="${HF_HUB_ENABLE_HF_TRANSFER:-0}"
 export TOKENIZERS_PARALLELISM=false
 
+# Use the venv created by scripts/setup_runpod.sh when present (override with VENV_DIR).
+for v in "${VENV_DIR:-}" /workspace/venv "$PWD/.venv"; do
+  if [[ -n "$v" && -f "$v/bin/activate" ]]; then source "$v/bin/activate"; break; fi
+done
+
 python scripts/run_eval.py \
   --model_path "$MODEL_PATH" --model_revision "$MODEL_REVISION" \
   --data_root "$DATA_ROOT" --data_revision "$DATA_REVISION" \

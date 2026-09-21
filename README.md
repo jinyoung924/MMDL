@@ -24,6 +24,7 @@ RunPod one-shot (setup + smoke test + full run): see [runpod.sh](runpod.sh).
 | RunPod template | `runpod/pytorch:1.3.2-cu1290-torch2130-ubuntu2404` |
 | CUDA / PyTorch / Python | 12.9 / 2.13.0 / 3.12 |
 | vLLM | 0.29.0 (pins torch 2.13.0; pulls transformers>=5.10.4) |
+| Python env | venv with `--system-site-packages` at `/workspace/venv` (Ubuntu 24.04 system python is PEP 668 managed) |
 | Exact lock | `results/requirements.lock.txt` (written by `scripts/setup_runpod.sh`) |
 
 ## Layout
