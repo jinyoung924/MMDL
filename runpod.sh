@@ -9,12 +9,14 @@
 #
 # Unattended mode (set these as RunPod Secrets and reference them in the pod template's env):
 #   GITHUB_TOKEN         fine-grained PAT, Contents: read/write on this repo  -> results are committed & pushed
-#   RUNPOD_USER_API_KEY  RunPod API key from Settings > API Keys               -> pod terminates itself at the end
+#   RUNPOD_USER_API_KEY  (or MY_RUNPOD_USER_API_KEY) RunPod API key, Settings > API Keys -> pod terminates itself
 #   AUTO_TERMINATE=0     keep the pod alive even when the key is present
 # Nothing secret is ever written into the repo; tokens are read from the environment only.
 # ============================================================================
 set -euo pipefail
 REPO_SLUG="${REPO_SLUG:-jinyoung924/MMDL}"
+# Accept either name for the RunPod user key (RunPod rejected the secret name RUNPOD_USER_API_KEY).
+RUNPOD_USER_API_KEY="${RUNPOD_USER_API_KEY:-${MY_RUNPOD_USER_API_KEY:-}}"
 
 # ---- unattended wrap-up: always runs, even when a step above failed ----------------------
 wrap_up() {
@@ -26,6 +28,8 @@ wrap_up() {
     git config user.name "${GIT_AUTHOR_NAME:-${REPO_SLUG%%/*}}"
     git config user.email "${GIT_AUTHOR_EMAIL:-${REPO_SLUG%%/*}@users.noreply.github.com}"
     local url="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_SLUG}.git"
+    mkdir -p results
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) pod=${RUNPOD_POD_ID:-?} gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1) rc=$rc smoke=${SKIP_SMOKE:-0} full=${SKIP_FULL:-0} ablations=${RUN_ABLATIONS:-0}" >> results/pod_runs.log
     git add results || true
     if git commit -q -m "results: $(hostname) $(date -u +%Y-%m-%dT%H:%MZ) (pushed from pod, main rc=$rc)"; then
       local pushed=0
