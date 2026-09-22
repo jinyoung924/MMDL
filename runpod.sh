@@ -6,8 +6,49 @@
 #
 # Re-running after a disconnect resumes where it stopped (per-subject checkpoints).
 # Knobs (env vars):  SKIP_SMOKE=1  SKIP_FULL=1  RUN_ABLATIONS=1  OUT_ROOT=/workspace/results
+#
+# Unattended mode (set these as RunPod Secrets and reference them in the pod template's env):
+#   GITHUB_TOKEN         fine-grained PAT, Contents: read/write on this repo  -> results are committed & pushed
+#   RUNPOD_USER_API_KEY  RunPod API key from Settings > API Keys               -> pod terminates itself at the end
+#   AUTO_TERMINATE=0     keep the pod alive even when the key is present
+# Nothing secret is ever written into the repo; tokens are read from the environment only.
 # ============================================================================
 set -euo pipefail
+REPO_SLUG="${REPO_SLUG:-jinyoung924/MMDL}"
+
+# ---- unattended wrap-up: always runs, even when a step above failed ----------------------
+wrap_up() {
+  local rc=$?
+  trap - EXIT
+  echo "== wrap-up (exit code of main flow: $rc) =="
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    cd "$REPO_DIR"
+    git config user.name "${GIT_AUTHOR_NAME:-${REPO_SLUG%%/*}}"
+    git config user.email "${GIT_AUTHOR_EMAIL:-${REPO_SLUG%%/*}@users.noreply.github.com}"
+    local url="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_SLUG}.git"
+    git add results || true
+    if git commit -q -m "results: $(hostname) $(date -u +%Y-%m-%dT%H:%MZ) (pushed from pod, main rc=$rc)"; then
+      local pushed=0
+      for i in 1 2 3 4 5; do
+        git push -q "$url" HEAD:main && { pushed=1; break; }
+        sleep 20; git pull -q --rebase "$url" main || true
+      done
+      echo "pushed=$pushed"
+    else
+      echo "nothing new to commit"
+    fi
+  else
+    echo "GITHUB_TOKEN not set -> results stay on the pod (copy them out before terminating!)"
+  fi
+  if [[ -n "${RUNPOD_USER_API_KEY:-}" && "${AUTO_TERMINATE:-1}" == "1" && -n "${RUNPOD_POD_ID:-}" ]]; then
+    echo "terminating pod $RUNPOD_POD_ID in 60 s (Ctrl-C to keep it)"; sleep 60
+    runpodctl config --apiKey "$RUNPOD_USER_API_KEY" >/dev/null 2>&1 || true
+    runpodctl remove pod "$RUNPOD_POD_ID" || echo "TERMINATE FAILED - remove the pod from the console"
+  else
+    echo "auto-terminate skipped (RUNPOD_USER_API_KEY unset or AUTO_TERMINATE=0)"
+  fi
+}
+trap wrap_up EXIT
 REPO_DIR="${REPO_DIR:-/workspace/MMDL}"
 OUT_ROOT="${OUT_ROOT:-/workspace/results}"
 cd "$REPO_DIR"
@@ -33,5 +74,4 @@ if [[ "${RUN_ABLATIONS:-0}" == "1" ]]; then
   for d in ablation_direct_1k ablation_direct_8k; do rm -rf "results/$d" && cp -r "$OUT_ROOT/$d" "results/$d"; done
 fi
 
-echo "== done. results copied into $REPO_DIR/results — commit & push them: =="
-echo "   cd $REPO_DIR && git add results && git commit -m 'results: mmmu baseline' && git push"
+echo "== done. results are in $REPO_DIR/results =="

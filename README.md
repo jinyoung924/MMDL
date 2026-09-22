@@ -24,7 +24,8 @@ MODEL_PATH=/path/to/finetuned_ckpt DATA_ROOT=/path/to/mmmu_snapshot OUT_DIR=resu
 ```
 
 RunPod one-shot (setup + smoke test + full run): see [runpod.sh](runpod.sh). `RUN_ABLATIONS=1` also runs the two
-direct-answer ablations. Re-grade stored responses without a GPU: `python scripts/regrade.py --out_dir results/<run>`.
+direct-answer ablations. With `GITHUB_TOKEN` and `RUNPOD_USER_API_KEY` in the pod's environment (RunPod Secrets),
+it pushes `results/` to this repo and terminates the pod when finished — no SSH session needed. Re-grade stored responses without a GPU: `python scripts/regrade.py --out_dir results/<run>`.
 
 ## Environment
 
@@ -45,7 +46,6 @@ src/mmmu_eval/               data.py (load/resize/interleave) · prompts.py · p
 scripts/run_mmmu_eval.sh     one-command reproduction  ->  run_eval.py + score.py
 scripts/setup_runpod.sh      CUDA preflight + venv + deps      runpod.sh: SSH entry point
 scripts/regrade.py           re-parse stored responses with the current parser (no GPU)
-scripts/finish_and_terminate.sh   optional: push results from the pod, then self-terminate it
 results/<run>/               predictions/<subject>.jsonl, scores.{md,csv,json}, run_meta.json, run.log
 reports/mmmu_baseline.md     submission (from docs/submit-template.md)
 docs/                        assignment text, template, references
