@@ -15,7 +15,12 @@
 # ============================================================================
 set -euo pipefail
 REPO_SLUG="${REPO_SLUG:-jinyoung924/MMDL}"
-# Accept either name for the RunPod user key (RunPod rejected the secret name RUNPOD_USER_API_KEY).
+# SSH sessions on RunPod do NOT inherit the container's env (secrets, RUNPOD_POD_ID), so fall back to
+# PID 1's environment for anything missing. Accept either name for the RunPod user key.
+_pid1_env() { tr '\0' '\n' < /proc/1/environ 2>/dev/null | sed -n "s/^$1=//p" | head -1; }
+for v in GITHUB_TOKEN RUNPOD_USER_API_KEY MY_RUNPOD_USER_API_KEY RUNPOD_POD_ID; do
+  [[ -z "${!v:-}" ]] && declare "$v=$(_pid1_env "$v")"
+done
 RUNPOD_USER_API_KEY="${RUNPOD_USER_API_KEY:-${MY_RUNPOD_USER_API_KEY:-}}"
 
 # ---- unattended wrap-up: always runs, even when a step above failed ----------------------
