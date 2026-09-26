@@ -12,6 +12,15 @@ grep -q 'HF_HOME=' ~/.bashrc 2>/dev/null || echo "export HF_HOME=$HF_HOME" >> ~/
 echo "== system =="; nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv
 python --version
 
+# Some RunPod hosts run an older driver (e.g. 570) than the image's CUDA forward-compat libcuda (575).
+# ldconfig prefers the compat lib, which GeForce cards do not support -> cuInit error 804.
+# Putting the host driver's libcuda first fixes it; harmless on hosts where it is not needed.
+HOST_LIBCUDA_DIR="${NVIDIA_CTK_LIBCUDA_DIR:-/usr/lib/x86_64-linux-gnu}"
+if [[ -e "$HOST_LIBCUDA_DIR/libcuda.so.1" ]]; then
+  export LD_LIBRARY_PATH="$HOST_LIBCUDA_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  grep -q 'LD_LIBRARY_PATH=' ~/.bashrc 2>/dev/null || echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> ~/.bashrc
+fi
+
 echo "== CUDA preflight (before the ~10 min install) =="
 # Catches faulty hosts early: nvidia-smi can look fine while the CUDA driver cannot initialise
 # (e.g. /dev/nvidia-uvm returns EIO -> cuInit 999). Nothing inside the container can fix that.

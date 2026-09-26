@@ -21,6 +21,9 @@ OUT_DIR="${OUT_DIR:-results/mmmu_baseline}"
 if [[ -z "${HF_HOME:-}" && -d /workspace ]]; then export HF_HOME=/workspace/hf; fi
 export HF_HUB_ENABLE_HF_TRANSFER="${HF_HUB_ENABLE_HF_TRANSFER:-0}"
 export TOKENIZERS_PARALLELISM=false
+# Prefer the host driver's libcuda over the image's forward-compat one (see scripts/setup_runpod.sh).
+_hl="${NVIDIA_CTK_LIBCUDA_DIR:-/usr/lib/x86_64-linux-gnu}"
+[[ -e "$_hl/libcuda.so.1" ]] && export LD_LIBRARY_PATH="$_hl${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 # Use the venv created by scripts/setup_runpod.sh when present (override with VENV_DIR).
 for v in "${VENV_DIR:-}" /workspace/venv "$PWD/.venv"; do
