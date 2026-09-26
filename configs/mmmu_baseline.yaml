@@ -35,6 +35,11 @@ generation:
   # direct-answer prompt (acc 34.3% vs 61.4% for finished ones); 8192 recovers most of them.
   # Qwen's own recipe uses out_seq_length=32768; 8192 is our 24 GB / runtime trade-off (~64 min per eval).
   max_new_tokens: 8192
+  # Post-processing for responses that hit max_new_tokens: append "\n\nAnswer:" to the partial
+  # response and let the model continue for a few tokens so an answer can be parsed.
+  # OFF by default (not part of the official MMMU procedure); evaluated in results/exp_trunc145.
+  force_answer_on_truncation: false
+  force_answer_max_tokens: 64
 
 image:
   # Qwen3-VL: 1 visual token per 32x32 px (patch 16 x merge 2).

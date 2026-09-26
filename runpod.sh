@@ -6,6 +6,7 @@
 #
 # Re-running after a disconnect resumes where it stopped (per-subject checkpoints).
 # Knobs (env vars):  SKIP_SMOKE=1  SKIP_FULL=1  RUN_ABLATIONS=1  OUT_ROOT=/workspace/results
+#                    EXPERIMENT_SCRIPT=scripts/exp_trunc145.sh  (runs that instead of smoke/full/ablations)
 #
 # Unattended mode (set these as RunPod Secrets and reference them in the pod template's env):
 #   GITHUB_TOKEN         fine-grained PAT, Contents: read/write on this repo  -> results are committed & pushed
@@ -64,6 +65,12 @@ cd "$REPO_DIR"
 git pull --ff-only || true
 
 bash scripts/setup_runpod.sh
+
+if [[ -n "${EXPERIMENT_SCRIPT:-}" ]]; then
+  echo "== experiment: $EXPERIMENT_SCRIPT =="
+  OUT_ROOT="$OUT_ROOT" bash "$EXPERIMENT_SCRIPT"
+  SKIP_SMOKE=1; SKIP_FULL=1; RUN_ABLATIONS=0
+fi
 
 if [[ "${SKIP_SMOKE:-0}" != "1" ]]; then
   echo "== smoke test (Art, 3 questions) =="

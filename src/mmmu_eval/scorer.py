@@ -33,6 +33,7 @@ def score(pred_dir: str) -> dict:
             "n_open": sum(1 for r in rows if r["question_type"] != "multiple-choice"),
             "n_parse_fallback": sum(1 for r in rows if r.get("parse_fallback")),
             "n_truncated": sum(1 for r in rows if r.get("finish_reason") == "length"),
+            "n_forced_answer": sum(1 for r in rows if r.get("forced_answer")),
         })
     evaluated = [s for s in per_subject if s["n"]]
     total_n = sum(s["n"] for s in evaluated)
@@ -46,6 +47,7 @@ def score(pred_dir: str) -> dict:
         "micro_avg_acc": (total_c / total_n * 100.0) if total_n else None,
         "n_parse_fallback": sum(s["n_parse_fallback"] for s in evaluated),
         "n_truncated": sum(s["n_truncated"] for s in evaluated),
+        "n_forced_answer": sum(s["n_forced_answer"] for s in evaluated),
         "complete": len(evaluated) == len(SUBJECTS) and all(s["n"] == 30 for s in evaluated),
     }
 
@@ -63,7 +65,7 @@ def to_markdown(res: dict) -> str:
     lines.append(f"계산식: `Overall = mean(30개 과목 accuracy)` = {fmt(res['macro_avg_acc'])}  "
                  f"(micro: {res['n_correct']}/{res['n_questions']} = {fmt(res['micro_avg_acc'])})")
     lines.append(f"파싱 fallback(무작위 선택) 건수: {res['n_parse_fallback']}, "
-                 f"max_new_tokens 도달(잘림) 건수: {res['n_truncated']}, 완주 여부: {res['complete']}")
+                 f"max_new_tokens 도달(잘림) 건수: {res['n_truncated']}, 답 강제(2단계) 건수: {res['n_forced_answer']}, 완주 여부: {res['complete']}")
     return "\n".join(lines)
 
 

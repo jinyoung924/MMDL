@@ -43,6 +43,9 @@ def parse_args():
     p.add_argument("--max_model_len", type=int)
     p.add_argument("--gpu_memory_utilization", type=float)
     p.add_argument("--seed", type=int)
+    p.add_argument("--presence_penalty", type=float)
+    p.add_argument("--force_answer", action="store_true", help="2nd pass: force 'Answer:' on truncated responses")
+    p.add_argument("--ids_file", help="only evaluate question ids listed in this file (one per line, # comments)")
     p.add_argument("--no_resume", action="store_true", help="discard existing predictions in out_dir")
     return p.parse_args()
 
@@ -58,11 +61,14 @@ def resolve_config(args) -> dict:
         ("max_pixels", ("image", "max_pixels")), ("min_pixels", ("image", "min_pixels")),
         ("max_model_len", ("engine", "max_model_len")),
         ("gpu_memory_utilization", ("engine", "gpu_memory_utilization")), ("seed", ("sampling", "seed")),
+        ("presence_penalty", ("sampling", "presence_penalty")),
     ]
     for arg, (sec, key) in ov:
         val = getattr(args, arg)
         if val is not None:
             cfg[sec][key] = val
+    if args.force_answer:
+        cfg["generation"]["force_answer_on_truncation"] = True
     if os.path.isdir(cfg["model"]["path"]):
         cfg["model"]["revision"] = None
     return cfg
@@ -93,7 +99,11 @@ def main():
 
     sampler = VramSampler().start()
     t0 = time.time()
-    stats = run(cfg, args.out_dir, subjects, args.limit, resume=not args.no_resume, log=log)
+    ids = None
+    if args.ids_file:
+        ids = {l.strip() for l in open(args.ids_file) if l.strip() and not l.startswith("#")}
+        log(f"restricting to {len(ids)} ids from {args.ids_file}")
+    stats = run(cfg, args.out_dir, subjects, args.limit, resume=not args.no_resume, log=log, ids=ids)
     elapsed = time.time() - t0
     peak = sampler.stop()
 
@@ -108,7 +118,7 @@ def main():
     runs = prev.get("runs", [])
     runs.append({"started": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t0)),
                  "elapsed_sec": round(elapsed, 1), "generated": stats["generated"],
-                 "peak_vram_mib": peak, "subjects": subjects, "limit": args.limit})
+                 "peak_vram_mib": peak, "subjects": subjects, "limit": args.limit, "ids_file": args.ids_file})
     write_json(meta_path, {"env": env, "config": cfg, "runs": runs,
                            "total_elapsed_sec": round(sum(r["elapsed_sec"] for r in runs), 1),
                            "peak_vram_mib": max(r["peak_vram_mib"] for r in runs),
