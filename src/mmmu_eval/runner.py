@@ -83,18 +83,23 @@ def run(cfg: dict, out_dir: str, subjects: list[str], limit: int | None, resume:
                        float(en["gpu_memory_utilization"]), int(en["limit_images_per_prompt"]), base_seed)
     log(f"engine ready in {time.time() - t0:.1f}s")
 
-    # 3) Generate per subject, checkpoint after each subject
+    # 3) Generate. Default: one batch per subject (checkpoint granularity for 900-question runs).
+    #    batch_all=True: every pending question in ONE batch - much faster for small id-filtered runs,
+    #    where per-subject batches of 1-2 long CoT responses would leave the GPU idle.
+    batch_all = bool(cfg["engine"].get("batch_all", False))
+    groups = [("all", [(subj, gi, ex) for subj, items in todo.items() for gi, ex in items])] if batch_all \
+        else [(subj, [(subj, gi, ex) for gi, ex in items]) for subj, items in todo.items()]
     generated = 0
-    for subj, items in tqdm(todo.items(), desc="subjects"):
-        conversations = [[{"role": "user", "content": ex.content}] for _, ex in items]
-        sps = [build_sampling_params(s, int(g["max_new_tokens"]), base_seed + gi) for gi, _ in items]
+    for gname, items in tqdm(groups, desc="batches"):
+        conversations = [[{"role": "user", "content": ex.content}] for _, _, ex in items]
+        sps = [build_sampling_params(s, int(g["max_new_tokens"]), base_seed + gi) for _, gi, _ in items]
         ts = time.time()
         outputs = llm.chat(conversations, sampling_params=sps, use_tqdm=False)
         forced = _force_answers(llm, cfg, conversations, sps, outputs, log) if g.get("force_answer_on_truncation") else {}
         elapsed = time.time() - ts
-        path = os.path.join(pred_dir, f"{subj}.jsonl")
-        with open(path, "a") as f:
-            for k, ((gi, ex), out) in enumerate(zip(items, outputs)):
+        files = {}
+        try:
+            for k, ((subj, gi, ex), out) in enumerate(zip(items, outputs)):
                 comp = out.outputs[0]
                 text = comp.text
                 cont = forced.get(k)
@@ -112,8 +117,13 @@ def run(cfg: dict, out_dir: str, subjects: list[str], limit: int | None, resume:
                     "options": ex.options, "prompt_style": style,
                     "forced_answer": cont is not None, "forced_continuation": cont,
                 }
-                f.write(json.dumps(row, ensure_ascii=False) + "\n")
+                if subj not in files:
+                    files[subj] = open(os.path.join(pred_dir, f"{subj}.jsonl"), "a")
+                files[subj].write(json.dumps(row, ensure_ascii=False) + "\n")
+        finally:
+            for f in files.values():
+                f.close()
         generated += len(items)
         n_tr = sum(1 for out in outputs if out.outputs[0].finish_reason == "length")
-        log(f"[{subj}] {len(items)} q in {elapsed:.1f}s ({elapsed / len(items):.2f}s/q) truncated={n_tr} forced={len(forced)}")
+        log(f"[{gname}] {len(items)} q in {elapsed:.1f}s ({elapsed / len(items):.2f}s/q) truncated={n_tr} forced={len(forced)}")
     return {"generated": generated}

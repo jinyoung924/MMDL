@@ -46,6 +46,7 @@ def parse_args():
     p.add_argument("--presence_penalty", type=float)
     p.add_argument("--force_answer", action="store_true", help="2nd pass: force 'Answer:' on truncated responses")
     p.add_argument("--ids_file", help="only evaluate question ids listed in this file (one per line, # comments)")
+    p.add_argument("--batch_all", action="store_true", help="one generation batch for all pending questions (fast for small id-filtered runs)")
     p.add_argument("--no_resume", action="store_true", help="discard existing predictions in out_dir")
     return p.parse_args()
 
@@ -69,6 +70,8 @@ def resolve_config(args) -> dict:
             cfg[sec][key] = val
     if args.force_answer:
         cfg["generation"]["force_answer_on_truncation"] = True
+    if args.batch_all:
+        cfg["engine"]["batch_all"] = True
     if os.path.isdir(cfg["model"]["path"]):
         cfg["model"]["revision"] = None
     return cfg
