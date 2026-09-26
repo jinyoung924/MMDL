@@ -25,7 +25,7 @@ MODEL_PATH=/path/to/finetuned_ckpt DATA_ROOT=/path/to/mmmu_snapshot OUT_DIR=resu
 
 RunPod one-shot (setup + smoke test + full run): see [runpod.sh](runpod.sh). `RUN_ABLATIONS=1` also runs the two
 direct-answer ablations. With `GITHUB_TOKEN` and `RUNPOD_USER_API_KEY` in the pod's environment (RunPod Secrets),
-it pushes `results/` to this repo and terminates the pod when finished — no SSH session needed. Re-grade stored responses without a GPU: `python scripts/regrade.py --out_dir results/<run>`.
+every finished run is pushed to this repo immediately (`scripts/push_results.sh`) and the pod terminates itself at the end — no SSH session needed. Re-grade stored responses without a GPU: `python scripts/regrade.py --out_dir results/<run>`.
 
 ## Environment
 

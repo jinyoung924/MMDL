@@ -36,3 +36,7 @@ python scripts/run_eval.py \
   --out_dir "$OUT_DIR" "$@"
 
 python scripts/score.py --out_dir "$OUT_DIR"
+
+# Push this run's results immediately (no-op without GITHUB_TOKEN). Disable with PUSH_EACH=0.
+[[ "${PUSH_EACH:-1}" == "1" ]] && bash scripts/push_results.sh "$OUT_DIR"
+exit 0
